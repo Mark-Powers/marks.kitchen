@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Mark's Kitchen - Projects</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        window.onload = function () {
+            var feed = new Vue({
+                el: '.feed',
+                data: {
+                    posts: []
+                },
+                created() {
+                    // fetch(new Request('/posts/blog')).then(response => response.json())
+                    //     .then(response => { response.forEach(post => {
+                    //             post.description = marked(post.description)
+                    //             this.posts.push(post);
+                    //         });
+                    //     });
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div>
+        <h1>
+            <a class="navigation" href="/" title="marks.kitchen">&lt;</a>
+            Projects
+        </h1>
+        <h2>A collection of my projects, mostly programming</h2>
+        <div id="feed" class="feed">
+
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://github.com/Mark-Powers/Cosmic-Cargo">Cosmic Cargo</a>
+                </h1>
+                <p class="card-text">
+                    A game I worked on with some friends for GBJAM 2019, and is 
+                    Oregon Trail, in space.
+                    This game was made over the course of a week, and can be played at
+                    <a href="https://seafarerscafe.itch.io/cosmic-cargo">this link</a>.
+                </p>
+                <p class="date">
+                    2019-08
+                </p>
+            </div>
+
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://github.com/Mark-Powers/marks.kitchen">marks.kitchen</a>
+                </h1>
+                <p class="card-text">
+                    The engine behind this website. I wanted to learn more about 
+                    back-end servers, and creating a way to me to update this 
+                    website dynamically. I wrote a blog post about the making 
+                    <a href="https://marks.kitchen/blog/34">here</a>.
+                </p>
+                <p class="date">
+                    2019-01 (until current)
+                </p>
+            </div>
+
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://github.com/Mark-Powers/marks.database">marks.database</a>
+                </h1>
+                <p class="card-text">
+                    A personal database management system I wrote in order to keep track 
+                    of a lot of things. I use this as a bookmark manager, a recipe and pantry
+                    organizer, and a way to store lots of other things too. I wrote some 
+                    about making this <a href="https://marks.kitchen/blog/38">here</a>.
+                </p>
+                <p class="date">
+                    2019-03
+                </p>
+            </div>
+
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://github.com/Mark-Powers/Telegram-Plugin-Bot">Telegram Plugin Bot</a>
+                </h1>
+                <p class="card-text">
+                    A custom Telegram bot I wrote in python that allowed for custom plugins.
+                    This made it super easy to add functionality to a bot, and it made
+                    my group chat with friends lively. This project has now been suceeded by a
+                    <a href="https://github.com/Mark-Powers/Telegram-Response-Bot-Java">rewrite</a>
+                    in Java. It was difficult to manage loading and unloading in Python, and
+                    wrapping the API by hand made it difficult to expand beyond basic messages.
+                </p>
+                <p class="date">
+                    2017-11 (Java: 2019-10)
+                </p>
+            </div>
+
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://github.com/Mark-Powers/telegram-arcade">Telegram arcade</a>
+                </h1>
+                <p class="card-text">
+                    A general purpose bot and web server to play Telegram HTML5 games.
+                    I couldn't find any existing solutions that allowed me to deploy
+                    these games easily, so I wrote my own. The API is not well documented,
+                    and I wrote a bit about it <a href="https://marks.kitchen/blog/39">here</a>.
+                </p>
+                <p class="date">
+                    2019-05
+                </p>
+            </div>
+
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://github.com/Mark-Powers/read-length">Read-Length</a>
+                </h1>
+                <p class="card-text">
+                    A firefox extension that adds the reading length of a website to the
+                    title of a page. This was my first web extension, and its technique
+                    for finding paragraph content doesn't work great. It works well in
+                    firefox on Ubuntu, as the window bar will display the title with
+                    the updated reading time.
+                </p>
+                <p class="date">
+                    2019-02
+                </p>
+            </div>
+
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://github.com/Mark-Powers/ccompiler">Compiler</a>
+                </h1>
+                <p class="card-text">
+                    A compiler I worked on as an indepedent study during undergrad,
+                    implementing techniques from "Compilers: Principles, Techniques, and Tools".
+                    I also wrote a small stack based <a href="https://github.com/Mark-Powers/stackvm">virtual
+                        machine</a> that runs the
+                    generated code
+                </p>
+                <p class="date">
+                    2019-10
+                </p>
+            </div>
+
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://github.com/Mark-Powers/streetcard">streetcard</a>
+                </h1>
+                <p class="card-text">
+                    A general purpose card game engine. I wanted to test out
+                    some strategies for card games, so I
+                    tried to write an engine for it. I didn't finish it, but
+                    you can play some basic card games in this engine.
+                </p>
+                <p class="date">
+                    2017-10
+                </p>
+            </div>
+
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://github.com/Mark-Powers/Roguelike">Roguelike</a>
+                </h1>
+                <p class="card-text">
+                    A rogue-like demo game I made just for fun while I was on winter break one year.
+                </p>
+                <p class="date">
+                    2017-01
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
