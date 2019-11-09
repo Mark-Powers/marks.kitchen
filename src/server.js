@@ -4,13 +4,14 @@ const cookieParser = require('cookie-parser');
 const request = require('request');
 const crypto = require('crypto');
 const uuidv4 = require('uuid/v4');
+const path = require('path');
 
 const Op = require('sequelize').Op;
 
 const multer = require('multer');
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'src/uploads/')
+        cb(null, __dirname+'/uploads/')
     },
     filename: function (req, file, cb) {
         var ext = "";
@@ -161,7 +162,7 @@ function setUpRoutes(models, jwtFunctions, database) {
         try {
             const type = req.body.type
             const newPost = await models.posts.create(req.body);
-            req.files.forEach(async (file) => {
+            req.files.forEach(async (file) => {	
                 await models.pictures.create({ "source": "uploads/" + file.filename, "postId": newPost.id });
                 console.log("uploaded ", file.path);
             })
