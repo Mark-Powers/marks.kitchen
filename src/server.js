@@ -97,7 +97,7 @@ function setUpRoutes(models, jwtFunctions, database) {
     server.get('/tags', (req, res) => res.sendFile(__dirname + "/html/tags.html"));
     server.get('/feed', (req, res) => res.sendFile(__dirname + "/html/feed.html"));
     server.get('/essay', (req, res) => res.sendFile(__dirname + "/html/essay.html"));
-    server.get('/snake', (req, res) => res.sendFile(__dirname + "/html/snake.html"));
+    server.get('/misc', (req, res) => res.sendFile(__dirname + "/html/misc.html"));
     server.get('/word-square', (req, res) => res.sendFile(__dirname + "/html/word-square.html"));
     server.get('/chess', (req, res) => res.sendFile(__dirname + "/html/chess.html"));
     server.get('/admin/chess', async (req, res, next) => res.sendFile(__dirname + "/html/chess.html"));
@@ -127,9 +127,9 @@ function setUpRoutes(models, jwtFunctions, database) {
         //var game = await database.query("select * from chessgames where name = '"+name+"'", { type: database.QueryTypes.SELECT })
         res.status(200).send({game:game});
     })
-    server.get('/setScore', (req, res) => {
-        request(`http://localhost:8000?${req.url.split("?")[1]}`, function (error, response, body) {
-        });
+    server.get('/admin/emails', async (req, res, next) => {
+        var emails = await models.emails.findAll();
+        res.status(200).send(emails);
     })
     server.get('/admin/stats', async (req, res, next) => {
         try {

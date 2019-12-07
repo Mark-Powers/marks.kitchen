@@ -14,13 +14,17 @@
                 el: '#stats',
                 data: {
                     stats: { session: [], url: [] },
+                    emails: [],
                     showSessionTable: false,
                     showUrlTable: false,
                     showLogData: false,
+                    showEmailData: false,
                 },
                 created() {
                     fetch(new Request('/admin/stats')).then(response => response.json())
                         .then(response => this.stats = response);
+                    fetch(new Request('/admin/emails')).then(response => response.json())
+                        .then(response => this.emails = response);
                 }
             });
         }
@@ -57,11 +61,26 @@
             </form>
         </div>
     </div>
+    <div>
+        <a href="/admin/chess" class="btn btn-primary">Chess</a>
+    </div>
     <div id="stats">
         <h1>Stats</h1>
         <div>
             <input type="checkbox" id="showSession" v-model="showSessionTable">
             <label for="showSession">Show Session Stats</label>
+        </div>
+        <div>
+            <input type="checkbox" id="showUrl" v-model="showUrlTable">
+            <label for="showUrl">Show URL Stats</label>
+        </div>
+        <div>
+            <input type="checkbox" id="showLog" v-model="showLogData">
+            <label for="showLog">Show Log</label>
+        </div>
+        <div>
+            <input type="checkbox" id="showEmail" v-model="showEmailData">
+            <label for="showEmail">Show Emails</label>
         </div>
         <div v-if="showSessionTable">
             {{stats.total}} total sessions
@@ -76,10 +95,6 @@
                 </tr>
             </table>
         </div>
-        <div>
-            <input type="checkbox" id="showUrl" v-model="showUrlTable">
-            <label for="showUrl">Show URL Stats</label>
-        </div>
         <table class="table url-table" v-if="showUrlTable">
             <tr>
                 <th>Method</th>
@@ -92,10 +107,6 @@
                 <td>{{item.c}}</td>
             </tr>
         </table>
-        <div>
-            <input type="checkbox" id="showLog" v-model="showLogData">
-            <label for="showLog">Show Log</label>
-        </div>
         <table class="table log-table" v-if="showLogData">
             <tr>
                 <th>Date</th>
@@ -109,6 +120,16 @@
                 <td>{{item.method}}</td>
                 <td>{{item.url.substring(0, Math.min(30, item.url.length))}}</td>
                 <td>{{item.c}}</td>
+            </tr>
+        </table>
+        <table class="table" v-if="showEmailData">
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+            </tr>
+            <tr v-for="item in emails">
+                <td>{{item.name}}</td>
+                <td>{{item.address}}</td>
             </tr>
         </table>
     </div>
