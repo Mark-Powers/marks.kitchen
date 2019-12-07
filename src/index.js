@@ -86,6 +86,12 @@ function setUpModels(){
           words: Sequelize.STRING,
           name: Sequelize.STRING,
           best: Sequelize.BOOLEAN
+        }),
+        "chessgames": database.define('chessgame', {
+          pieces: Sequelize.TEXT,
+          name: {type:Sequelize.STRING, primaryKey: true},
+          turn: Sequelize.STRING,
+          userside: Sequelize.STRING
         })
     }
     models.pictures.belongsTo(models.posts);

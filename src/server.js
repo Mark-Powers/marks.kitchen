@@ -99,10 +99,33 @@ function setUpRoutes(models, jwtFunctions, database) {
     server.get('/essay', (req, res) => res.sendFile(__dirname + "/html/essay.html"));
     server.get('/snake', (req, res) => res.sendFile(__dirname + "/html/snake.html"));
     server.get('/word-square', (req, res) => res.sendFile(__dirname + "/html/word-square.html"));
+    server.get('/chess', (req, res) => res.sendFile(__dirname + "/html/chess.html"));
+    server.get('/admin/chess', async (req, res, next) => res.sendFile(__dirname + "/html/chess.html"));
     server.get('/projects', (req, res) => res.sendFile(__dirname + "/html/projects.html"));
     server.get('/wordsquares/best', async (req, res, next) => {
         var best = await database.query("select words, name from wordsquares where best = 1", { type: database.QueryTypes.SELECT })
         res.status(200).send({ best: best });
+    })
+    server.get('/admin/chess/games', async (req, res, next) => {
+        const { name } = req.params;
+        var game = await models.chessgames.findOne({where: {
+            turn: {
+                [Op.ne]: {$col: 'userside'}
+            }
+        
+            // database.where(
+            //     database.col('userside'),
+            //     database.col('turn')
+            //   )
+        }})
+        // var game = await database.query("select * from chessgames where userside != turn", { type: database.QueryTypes.SELECT })
+        res.status(200).send({game:game});
+    })
+    server.get('/chess/:name', async (req, res, next) => {
+        const { name } = req.params;
+        var game = await models.chessgames.findOne({where: {name: name}})
+        //var game = await database.query("select * from chessgames where name = '"+name+"'", { type: database.QueryTypes.SELECT })
+        res.status(200).send({game:game});
     })
     server.get('/setScore', (req, res) => {
         request(`http://localhost:8000?${req.url.split("?")[1]}`, function (error, response, body) {
@@ -208,6 +231,22 @@ function setUpRoutes(models, jwtFunctions, database) {
         } else {
             console.debug("Error with wordsquare submission")
         }
+    })
+    server.post('/chess', async (req, res, next) => {
+        const game = req.body;
+        if (game) {
+            models.chessgames.findOne({where: {name: game.name}})
+            .then(obj => {
+                if(obj){
+                    obj.update(game)
+                } else {
+                    models.chessgames.create(game)
+                }
+            })
+        } else {
+            console.debug("Error with chess submission")
+        }
+        res.status(200).send(game);
     })
 
 
