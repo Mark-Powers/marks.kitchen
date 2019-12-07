@@ -3,7 +3,7 @@
 // Admin view?
 
 var gameInterval, canvas, ctx;
-var pieces, turn, user_turn;
+var pieces, turn, user_turn, real_user_turn;
 var selected;
 var person;
 var pgn;
@@ -92,7 +92,6 @@ function is_admin(){
 }
 
 function init() {
-    console.log(window.location.pathname)
     if (is_admin()) {
         fetch(new Request("/admin/chess/games", {
             method: 'GET',
@@ -120,7 +119,16 @@ function load(response){
         person = response.game.name
         pieces = JSON.parse(response.game.pieces);
         turn = response.game.turn;
-        user_turn = response.game.userside;
+        real_user_turn = user_turn = response.game.userside;
+        if(is_admin()){
+            // swap the user_turn if admin
+            if(user_turn == "white"){
+                user_turn = "black"
+            } else {
+                user_turn = "white"
+            }
+        }
+
         status = "Turn: " + turn + ". You play " + user_turn
         pgn = [] // TODO
     } else {
@@ -153,7 +161,7 @@ function next_turn() {
         pieces: JSON.stringify(pieces),
         name: person,
         turn: turn,
-        userside: user_turn
+        userside: real_user_turn
     };
     var formBody = [];
     for (var property in details) {
@@ -170,7 +178,6 @@ function next_turn() {
         body: formBody
     }))
         .then((response) => {
-            console.log(response)
         })
 }
 
@@ -215,7 +222,7 @@ function piece_at(row, col) {
 
 // TODO king cannot take piece attacking him from right next door
 function mousePush(e) {
-    if (turn != user_turn && !is_admin()) {
+    if (turn != user_turn) {
         return;
     }
 
@@ -285,8 +292,6 @@ function mousePush(e) {
     } else {
         selected = undefined;
     }
-    // console.log(pgn)
-    console.log(JSON.stringify(pieces))
 }
 function in_check() {
     // in check if legal move from any opposing piece to king
@@ -448,18 +453,4 @@ function color(c) {
 function gameOver() {
     isGameOver = true;
     clearInterval(gameInterval);
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const uid = urlParams.get('uid');
-    const mid = urlParams.get('mid');
-    const cid = urlParams.get('cid');
-    const imid = urlParams.get('imid');
-    if (imid) {
-        const request = new Request(`/setScore?uid=${uid}&imid=${imid}&score=${score}`);
-        fetch(request).then(response => console.log("set score"));
-    }
-    else {
-        const request = new Request(`/setScore?uid=${uid}&mid=${mid}&cid=${cid}&score=${score}`);
-        fetch(request).then(response => console.log("set score"));
-    }
 }
