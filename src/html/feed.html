@@ -3,11 +3,11 @@
         <p class="card-text" v-html="post.description"></p>
         <div class="card-img">
             <span v-for="image in post.images">
-                <a v-bind:href="image"><img v-bind:src="image"></a>
+                <a v-bind:href="'/'+image"><img v-bind:src="'/'+image"></a>
             </span>
         </div>
         <p class="date">
-            {{ post.createdAt.substring(0,10) }}
+            <a v-bind:href="'/post/'+post.type+'/'+post.id">{{ post.createdAt.substring(0,10) }}</a>
             <span v-for="tag in post.tags">
                 <a class="tag" v-bind:href="'/tags#'+tag">{{tag}}</a>
             </span>

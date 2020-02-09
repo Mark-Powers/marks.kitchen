@@ -143,8 +143,8 @@ function setUpRoutes(models, jwtFunctions, database) {
             res.status(400).send(e.message);
         }
     })
-    server.get('/blog/:id', async (req, res, next) => {
-        res.sendFile(__dirname + "/html/blog-single.html");
+    server.get('/post/:type/:id', async (req, res, next) => {
+        res.sendFile(__dirname + "/html/post-single.html");
     })
     server.get('/tags/:name', async (req, res, next) => {
         console.log("TAGS/NAME");
@@ -172,6 +172,23 @@ function setUpRoutes(models, jwtFunctions, database) {
             const { type } = req.params;
             var posts = await models.posts.findAll({
                 where: { type: type }, order: [['createdAt', 'DESC']]
+            });
+            posts = posts.map(x => x.get({ plain: true }));
+            await addImagesAndTagsToPosts(models, posts)
+            res.status(200).send(posts);
+            next();
+        } catch (e) {
+            res.status(400).send(e.message);
+        }
+    })
+    server.get('/posts/:type/:id', async (req, res, next) => {
+        try {
+            const { type, id } = req.params;
+            var posts = await models.posts.findAll({
+                where: { 
+                    type: type,
+                    id: id
+                }, order: [['createdAt', 'DESC']]
             });
             posts = posts.map(x => x.get({ plain: true }));
             await addImagesAndTagsToPosts(models, posts)
