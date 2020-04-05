@@ -102,6 +102,9 @@ function setUpRoutes(models, jwtFunctions, database) {
     server.get('/chess', (req, res) => res.sendFile(__dirname + "/html/chess.html"));
     server.get('/admin/chess', async (req, res, next) => res.sendFile(__dirname + "/html/chess.html"));
     server.get('/projects', (req, res) => res.sendFile(__dirname + "/html/projects.html"));
+    server.get('/zines', (req, res) => res.sendFile(__dirname + "/public/zines.html"));
+    server.use('/static', express.static(__dirname + '/public'))
+
     server.get('/wordsquares/best', async (req, res, next) => {
         var best = await database.query("select words, name from wordsquares where best = 1", { type: database.QueryTypes.SELECT })
         res.status(200).send({ best: best });
