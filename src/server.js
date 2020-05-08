@@ -5,6 +5,7 @@ const request = require('request');
 const crypto = require('crypto');
 const uuidv4 = require('uuid/v4');
 const path = require('path');
+const rss = require('rss');
 
 const Op = require('sequelize').Op;
 
@@ -284,6 +285,29 @@ function setUpRoutes(models, jwtFunctions, database) {
         res.sendFile(__dirname + "/js/" + req.params.id);
     });
 
+    server.get('/feed.xml', async (req, res) => {
+        var feed = new rss({
+            title: "Mark's Kitchen",
+            description: "Posts from marks.kitchen",
+            feed_url: "https://marks.kitchen/rss",
+            site_url: "https://marks.kitchen",
+            webMaster: "webmaster@marks.kitchen",
+            copyright: "Mark Powers"
+        })
+        var posts = await models.posts.findAll({
+            order: [['createdAt', 'DESC']]
+        });
+        posts = posts.map(x => x.get({ plain: true }));
+        posts.forEach(post =>{
+            feed.item({
+                title: post.createdAt.toString().substring(0, post.createdAt.toString().indexOf(" GMT")),
+                description: post.description,
+                date: post.createdAt,
+                url: `https://marks.kitchen/post/${post.type}/${post.id}`,
+            })
+        })
+        res.status(200).send(feed.xml({indent: true}))
+    })
 }
 
 module.exports = {
