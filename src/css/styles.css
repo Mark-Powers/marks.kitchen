@@ -11,7 +11,8 @@
   
 
 body {
-    padding: 15px;
+    width: 100%;
+    margin: 0px;
     background-color: var(--background); 
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -23,8 +24,9 @@ h1, h2 {
 
 h1 {
     font-size: 30pt;
-    margin-bottom: 0;
     margin: auto;
+    margin-bottom: 0;
+    margin-left: 20px;
 }
 
 @keyframes zoom-left {
@@ -39,6 +41,11 @@ footer {
     border-top: 1px solid var(--light-text);
     color: var(--light-text);
     background-color: var(--background-accent);
+}
+
+footer a {
+    color: var(--light-text);
+    text-decoration: underline;
 }
 
 .essay{
@@ -78,12 +85,15 @@ a {
     margin: 2%;
     border: 2px solid #888;
 }
-
-
+.spacer {
+    width: 1em;
+    display: inline-block;
+}
 #feed {
     width: 100%;
 }
 .feed {
+    width: 80%;
     min-width: 200px;
     margin: auto;
     display: flex;
@@ -101,8 +111,8 @@ p {
 
 @media screen and (min-width: 900px) {
     body {
-        width: 80%;
-        margin: auto;
+        width: 100%;
+        /* margin: auto; */
     }
     .card-img {
         display: flex;
