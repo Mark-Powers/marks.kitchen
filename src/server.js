@@ -306,6 +306,7 @@ function setUpRoutes(models, jwtFunctions, database) {
                 url: `https://marks.kitchen/post/${post.type}/${post.id}`,
             })
         })
+        res.setHeader('Content-Type', 'text/xml')
         res.status(200).send(feed.xml({indent: true}))
     })
 }
