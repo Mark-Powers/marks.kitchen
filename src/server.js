@@ -388,6 +388,12 @@ function setUpRoutes(models, jwtFunctions, database) {
         res.setHeader('Content-Type', 'text/xml')
         res.status(200).send(feed.xml({indent: true}))
     })
+
+    // Final 404 fallback
+    server.use(function(req, res) {
+        res.status(400);
+        res.sendFile(__dirname + "/html/404.html");
+    });
 }
 
 module.exports = {
