@@ -134,6 +134,17 @@ function setUpRoutes(models, jwtFunctions, database) {
         res.status(200).send(html.join(""))
         // res.sendFile(__dirname + "/html/index.html")
     })
+    server.get('/bread', async (req, res) => {
+        var html = []
+        html.push(templates["bread"]["pre"])
+        // html.push(templates["titlebar"])
+        html.push(await constructFeed(models, "bread"))
+        html.push(templates["footer"])
+        html.push(templates["bread"]["post"])
+    
+        res.status(200).send(html.join(""))
+        // res.sendFile(__dirname + "/html/index.html")
+    })
     server.get('/admin', (req, res) => res.sendFile(__dirname + "/html/admin.html"));
     server.get('/login', (req, res) => res.sendFile(__dirname + "/html/login.html"))
     server.get('/email', (req, res) => res.sendFile(__dirname + "/html/email.html"))

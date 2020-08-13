@@ -36,5 +36,26 @@ module.exports = {
             <h1>Welcome to Mark's Kitchen</h1>`,
             post: `</body>
             </html>`
+    },
+    bread: {
+        pre: `<!doctype html>
+        <html lang="en">
+        
+        <head>
+            <title>Mark's Kitchen - Bread</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <link rel="stylesheet" type="text/css" href="/css/styles.css">
+            <link rel="shortcut icon" href="/favicon.ico">
+        </head>
+        
+        <body>
+            <h1>
+                <a class="navigation" href="/" title="marks.kitchen">&lt;</a>
+                Bread
+            </h1>
+            Some highlights (and lowlights) of breadmaking`,
+            post: `</body>
+            </html>`
     }
 }
