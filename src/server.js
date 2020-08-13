@@ -50,13 +50,7 @@ function hashWithSalt(password, salt){
     return hash.digest("base64");
 };
 
-async function constructFeed(models, postType){
-    var posts = await models.posts.findAll({
-        where: { type: postType }, order: [['createdAt', 'DESC']]
-    });
-    posts = posts.map(x => x.get({ plain: true }));
-    await addImagesAndTagsToPosts(models, posts)
-
+function constructFeed(posts){
     var html = []
     html.push(`<div class="feed">`)
     posts.forEach(post => {
@@ -81,6 +75,29 @@ async function constructFeed(models, postType){
     })
     html.push(`</div>`)
     return html.join("");
+}
+
+async function constructFeedFromType(models, postType){
+    var posts = await models.posts.findAll({
+        where: { type: postType }, order: [['createdAt', 'DESC']]
+    });
+    posts = posts.map(x => x.get({ plain: true }));
+    await addImagesAndTagsToPosts(models, posts)
+
+    return constructFeed(posts)
+}
+
+async function constructSinglePost(models, postType, postId){
+    var posts = await models.posts.findAll({
+        where: { 
+            type: postType,
+            id: postId
+        }, order: [['createdAt', 'DESC']]
+    });
+    posts = posts.map(x => x.get({ plain: true }));
+    await addImagesAndTagsToPosts(models, posts)
+    
+    return constructFeed(posts)
 }
 
 function setUpRoutes(models, jwtFunctions, database) {
@@ -128,7 +145,7 @@ function setUpRoutes(models, jwtFunctions, database) {
         var html = []
         html.push(templates["index"]["pre"])
         html.push(templates["titlebar"])
-        html.push(await constructFeed(models, "index"))
+        html.push(await constructFeedFromType(models, "index"))
         html.push(templates["footer"])
         html.push(templates["index"]["post"])
     
@@ -137,7 +154,7 @@ function setUpRoutes(models, jwtFunctions, database) {
     server.get('/bread', async (req, res) => {
         var html = []
         html.push(templates["bread"]["pre"])
-        html.push(await constructFeed(models, "bread"))
+        html.push(await constructFeedFromType(models, "bread"))
         html.push(templates["footer"])
         html.push(templates["bread"]["post"])
     
@@ -146,7 +163,16 @@ function setUpRoutes(models, jwtFunctions, database) {
     server.get('/blog', async (req, res) => {
         var html = []
         html.push(templates["blog"]["pre"])
-        html.push(await constructFeed(models, "blog"))
+        html.push(await constructFeedFromType(models, "blog"))
+        html.push(templates["footer"])
+        html.push(templates["blog"]["post"])
+    
+        res.status(200).send(html.join(""))
+    })
+    server.get('/post/:type/:id', async (req, res) => {
+        var html = []
+        html.push(templates["blog"]["pre"])
+        html.push(await constructSinglePost(models, req.params.type, req.params.id))
         html.push(templates["footer"])
         html.push(templates["blog"]["post"])
     
@@ -207,9 +233,6 @@ function setUpRoutes(models, jwtFunctions, database) {
         } catch (e) {
             res.status(400).send(e.message);
         }
-    })
-    server.get('/post/:type/:id', async (req, res, next) => {
-        res.sendFile(__dirname + "/html/post-single.html");
     })
     server.get('/tags/:name', async (req, res, next) => {
         try {
