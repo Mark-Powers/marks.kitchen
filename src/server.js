@@ -67,7 +67,7 @@ function constructFeed(posts){
             <a href="/post/${post.type}/${post.id}">${post.createdAt.toString().substring(0,10)}</a>`)
         post.tags.forEach(tag => {
             html.push(`<span>
-                <a class="tag" href="/tags#${tag}">${tag}</a>
+                <a class="tag" href="/tags/${tag}">${tag}</a>
             </span>`)
         })
         html.push(`</p>
@@ -178,11 +178,32 @@ function setUpRoutes(models, jwtFunctions, database) {
     
         res.status(200).send(html.join(""))
     })
+    server.get('/tags/:name', async (req, res) => {
+        const { name } = req.params;
+        const postsWithTag = await models.tags.findAll({ attributes: ["postId"], where: { text: name } })
+            .map(function (x) {
+                return { id: x.postId }
+            });
+        var posts = await models.posts.findAll({
+            where: { [Op.or]: postsWithTag }, order: [['createdAt', 'DESC']]
+        });
+        posts = posts.map(x => x.get({ plain: true }));
+        await addImagesAndTagsToPosts(models, posts)
+
+        var html = []
+        html.push(templates["blog"]["pre"])
+        html.push(`<h1>#${name}</h1>`)
+        html.push(await constructFeed(posts))
+        html.push(templates["footer"])
+        html.push(templates["blog"]["post"])
+    
+        res.status(200).send(html.join(""))
+    })
     
     server.get('/admin', (req, res) => res.sendFile(__dirname + "/html/admin.html"));
     server.get('/login', (req, res) => res.sendFile(__dirname + "/html/login.html"))
     server.get('/email', (req, res) => res.sendFile(__dirname + "/html/email.html"))
-    server.get('/tags', (req, res) => res.sendFile(__dirname + "/html/tags.html"));
+    // server.get('/tags', (req, res) => res.sendFile(__dirname + "/html/tags.html"));
     server.get('/feed', (req, res) => res.sendFile(__dirname + "/html/feed.html"));
     server.get('/essay', (req, res) => res.sendFile(__dirname + "/html/essay.html"));
     server.get('/misc', (req, res) => res.sendFile(__dirname + "/html/misc.html"));
@@ -203,19 +224,12 @@ function setUpRoutes(models, jwtFunctions, database) {
             turn: {
                 [Op.ne]: {$col: 'userside'}
             }
-        
-            // database.where(
-            //     database.col('userside'),
-            //     database.col('turn')
-            //   )
         }})
-        // var game = await database.query("select * from chessgames where userside != turn", { type: database.QueryTypes.SELECT })
         res.status(200).send({game:game});
     })
     server.get('/chess/:name', async (req, res, next) => {
         const { name } = req.params;
         var game = await models.chessgames.findOne({where: {name: name}})
-        //var game = await database.query("select * from chessgames where name = '"+name+"'", { type: database.QueryTypes.SELECT })
         res.status(200).send({game:game});
     })
     server.get('/admin/emails', async (req, res, next) => {
@@ -231,25 +245,6 @@ function setUpRoutes(models, jwtFunctions, database) {
             res.status(200).send({ total: total[0].t, session: sessionResult, url: urlResult, log: logResult });
             next();
         } catch (e) {
-            res.status(400).send(e.message);
-        }
-    })
-    server.get('/tags/:name', async (req, res, next) => {
-        try {
-            const { name } = req.params;
-            const postsWithTag = await models.tags.findAll({ attributes: ["postId"], where: { text: name } })
-                .map(function (x) {
-                    return { id: x.postId }
-                });
-            var posts = await models.posts.findAll({
-                where: { [Op.or]: postsWithTag }, order: [['createdAt', 'DESC']]
-            });
-            posts = posts.map(x => x.get({ plain: true }));
-            await addImagesAndTagsToPosts(models, posts)
-            res.status(200).send(posts);
-            next();
-        } catch (e) {
-            console.error(e);
             res.status(400).send(e.message);
         }
     })
