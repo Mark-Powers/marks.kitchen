@@ -203,7 +203,7 @@ function setUpRoutes(models, jwtFunctions, database) {
     server.get('/admin', (req, res) => res.sendFile(__dirname + "/html/admin.html"));
     server.get('/login', (req, res) => res.sendFile(__dirname + "/html/login.html"))
     server.get('/email', (req, res) => res.sendFile(__dirname + "/html/email.html"))
-    // server.get('/tags', (req, res) => res.sendFile(__dirname + "/html/tags.html"));
+    server.get('/email-success', (req, res) => res.sendFile(__dirname + "/html/email-success.html"))
     server.get('/feed', (req, res) => res.sendFile(__dirname + "/html/feed.html"));
     server.get('/essay', (req, res) => res.sendFile(__dirname + "/html/essay.html"));
     server.get('/misc', (req, res) => res.sendFile(__dirname + "/html/misc.html"));
@@ -317,7 +317,7 @@ function setUpRoutes(models, jwtFunctions, database) {
         const email = req.body.email;
         if (name && email) {
             models.emails.create({"name": name, "address": email})
-            res.redirect('/email#success');
+            res.redirect('/email-success');
         } else {
             console.debug("Error with email submission")
         }

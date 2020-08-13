@@ -14,13 +14,7 @@
             <a class="navigation" href="/" title="marks.kitchen">&lt;</a>
             Email
         </h1>
-        <p>Sign up to receive Mark's email newsletter</p>
-        <div class="form">
-            <form action="/email" method="post" enctype="application/x-www-form-urlencoded">
-                <input type="text" placeholder="Your name" name="name" required>
-                <input type="email" placeholder="Your email" name="email" required>
-                <input type="submit" value="Submit">
-            </form>
+        <h2 id="status" v-if='show'>Success, thank you!</h2>
         </div>
     </div>
 </body>
