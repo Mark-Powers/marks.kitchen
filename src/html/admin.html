@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> -->
     <script>
         window.onload = function () {
             var feed = new Vue({
@@ -39,7 +40,7 @@
     <div>
         <h1>Create Post</h1>
         <div class="form">
-            <form action="/posts" method="post" enctype="multipart/form-data">
+            <form action="/admin/posts" method="post" enctype="multipart/form-data">
                 <div>
                     <textarea name="description"></textarea>
                 </div>

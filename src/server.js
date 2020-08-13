@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const uuidv4 = require('uuid/v4');
 const path = require('path');
 const rss = require('rss');
+const marked = require('marked');
 
 const templates = require('./templates');
 
@@ -132,24 +133,29 @@ function setUpRoutes(models, jwtFunctions, database) {
         html.push(templates["index"]["post"])
     
         res.status(200).send(html.join(""))
-        // res.sendFile(__dirname + "/html/index.html")
     })
     server.get('/bread', async (req, res) => {
         var html = []
         html.push(templates["bread"]["pre"])
-        // html.push(templates["titlebar"])
         html.push(await constructFeed(models, "bread"))
         html.push(templates["footer"])
         html.push(templates["bread"]["post"])
     
         res.status(200).send(html.join(""))
-        // res.sendFile(__dirname + "/html/index.html")
     })
+    server.get('/blog', async (req, res) => {
+        var html = []
+        html.push(templates["blog"]["pre"])
+        html.push(await constructFeed(models, "blog"))
+        html.push(templates["footer"])
+        html.push(templates["blog"]["post"])
+    
+        res.status(200).send(html.join(""))
+    })
+    
     server.get('/admin', (req, res) => res.sendFile(__dirname + "/html/admin.html"));
     server.get('/login', (req, res) => res.sendFile(__dirname + "/html/login.html"))
     server.get('/email', (req, res) => res.sendFile(__dirname + "/html/email.html"))
-    server.get('/bread', (req, res) => res.sendFile(__dirname + "/html/bread.html"));
-    server.get('/blog', (req, res) => res.sendFile(__dirname + "/html/blog.html"));
     server.get('/tags', (req, res) => res.sendFile(__dirname + "/html/tags.html"));
     server.get('/feed', (req, res) => res.sendFile(__dirname + "/html/feed.html"));
     server.get('/essay', (req, res) => res.sendFile(__dirname + "/html/essay.html"));
@@ -255,18 +261,20 @@ function setUpRoutes(models, jwtFunctions, database) {
             res.status(400).send(e.message);
         }
     })
-    server.post('/posts', upload.array('images'), async (req, res, next) => {
+    server.post('/admin/posts', upload.array('images'), async (req, res, next) => {
         try {
             const type = req.body.type
+            req.body.description = marked(req.body.description)
             const newPost = await models.posts.create(req.body);
             req.files.forEach(async (file) => {	
                 await models.pictures.create({ "source": "uploads/" + file.filename, "postId": newPost.id });
                 console.log("uploaded ", file.path);
             })
-            req.body.tags.split(" ").forEach(async (tag) => {
-                await models.tags.create({ "text": tag, "postId": newPost.id });
-            })
-            console.log(newPost);
+            if(req.body.tags.trim().length > 0) {
+                req.body.tags.split(" ").forEach(async (tag) => {
+                    await models.tags.create({ "text": tag, "postId": newPost.id });
+                })
+            }
             res.redirect(`/${type}`);
             next();
         } catch (e) {
