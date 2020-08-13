@@ -7,6 +7,8 @@ const uuidv4 = require('uuid/v4');
 const path = require('path');
 const rss = require('rss');
 
+const templates = require('./templates');
+
 const Op = require('sequelize').Op;
 
 const multer = require('multer');
@@ -46,6 +48,39 @@ function hashWithSalt(password, salt){
     hash.update(password);
     return hash.digest("base64");
 };
+
+async function constructFeed(models, postType){
+    var posts = await models.posts.findAll({
+        where: { type: postType }, order: [['createdAt', 'DESC']]
+    });
+    posts = posts.map(x => x.get({ plain: true }));
+    await addImagesAndTagsToPosts(models, posts)
+
+    var html = []
+    html.push(`<div class="feed">`)
+    posts.forEach(post => {
+        html.push(`<div class="card">
+        <p class="card-text">${post.description}</p>
+        <div class="card-img">`)
+        post.images.forEach(image => {
+            html.push(`<span>
+                <a href="/${image}"><img src="/${image}"></a>
+            </span>`)
+        })
+        html.push(`</div>
+        <p class="date">
+            <a href="/post/${post.type}/${post.id}">${post.createdAt.toString().substring(0,10)}</a>`)
+        post.tags.forEach(tag => {
+            html.push(`<span>
+                <a class="tag" href="/tags#${tag}">${tag}</a>
+            </span>`)
+        })
+        html.push(`</p>
+        </div>`)
+    })
+    html.push(`</div>`)
+    return html.join("");
+}
 
 function setUpRoutes(models, jwtFunctions, database) {
     // Authentication routine
@@ -88,8 +123,17 @@ function setUpRoutes(models, jwtFunctions, database) {
         next()
     })
 
-    server.get('/', (req, res) => res.sendFile(__dirname + "/html/index.html"))
-    server.get('/index', (req, res) => res.sendFile(__dirname + "/html/index.html"))
+    server.get('/', async (req, res) => {
+        var html = []
+        html.push(templates["index"]["pre"])
+        html.push(templates["titlebar"])
+        html.push(await constructFeed(models, "index"))
+        html.push(templates["footer"])
+        html.push(templates["index"]["post"])
+    
+        res.status(200).send(html.join(""))
+        // res.sendFile(__dirname + "/html/index.html")
+    })
     server.get('/admin', (req, res) => res.sendFile(__dirname + "/html/admin.html"));
     server.get('/login', (req, res) => res.sendFile(__dirname + "/html/login.html"))
     server.get('/email', (req, res) => res.sendFile(__dirname + "/html/email.html"))
@@ -151,7 +195,6 @@ function setUpRoutes(models, jwtFunctions, database) {
         res.sendFile(__dirname + "/html/post-single.html");
     })
     server.get('/tags/:name', async (req, res, next) => {
-        console.log("TAGS/NAME");
         try {
             const { name } = req.params;
             const postsWithTag = await models.tags.findAll({ attributes: ["postId"], where: { text: name } })
@@ -163,7 +206,6 @@ function setUpRoutes(models, jwtFunctions, database) {
             });
             posts = posts.map(x => x.get({ plain: true }));
             await addImagesAndTagsToPosts(models, posts)
-            console.log(posts);
             res.status(200).send(posts);
             next();
         } catch (e) {
