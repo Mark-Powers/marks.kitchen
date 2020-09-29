@@ -10,13 +10,17 @@ module.exports = {
 </div>
 </nav>`,
     footer: `<footer>
-    <div>Mark Powers</div>
+    <div>Mark Powers (<span class="email">mark</span>) &#169; 2020 </div>
     <div>
         <a href="/feed.xml">RSS feed</a>
         <span class="spacer"></span>
         <a href="https://github.com/Mark-Powers">GitHub</a>
         <span class="spacer"></span>
-        <span>mark-at-marks.kitchen</span>
+        <a href="https://git.marks.kitchen/mark">Gitea</a>
+        <span class="spacer"></span>
+        <a href="https://fosstodon.org/@markp">Mastodon</a>
+        <span class="spacer"></span>
+        <br>
     </div>
 </footer>`,
 
@@ -30,6 +34,7 @@ module.exports = {
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
             <link rel="stylesheet" type="text/css" href="/css/styles.css">
             <link rel="shortcut icon" href="/favicon.ico">
+            <link rel="alternate" type="application/rss+xml" title="RSS Feed for marks.kitchen" href="/feed.xml" />
         </head>
         
         <body>

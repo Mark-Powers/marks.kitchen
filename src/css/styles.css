@@ -228,3 +228,7 @@ a.navigation:visited, a.navigation:link {
     color: var(--accent);
     text-decoration: none;
 }
+
+.email::after {
+    content: "@marks.kitchen";
+}
