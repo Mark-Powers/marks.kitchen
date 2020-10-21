@@ -16,8 +16,134 @@
             Projects
         </h1>
         <h2>A collection of my projects, mostly programming</h2>
-        <div id="feed" class="feed">
-
+        <div id="feed" class="feed projects">
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://git.marks.kitchen/mark/wikijscmd">wikijscmd</a>
+                </h1>
+                <p class="card-text">
+                    I use wiki.js for my personal wiki. I wanted a simple client I could use for it
+                    and a command line one would also allow for me to script it. The wiki comes built
+                    in with a GraphQL API, so I learned some GraphQL and created a python wrapper that
+                    allows for managing and editing of wiki.js content over this API.
+                </p>
+                <p class="date">
+                    2020-10
+                </p>
+            </div>
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://git.marks.kitchen/mark/pi-weather-station">Pi Weather Station</a>
+                </h1>
+                <p class="card-text">
+                    I set up a sensor on a raspberry pi zero to measure the temperature, pressure, and humidity.
+                    This project is a web site that runs on the pi that plots the data over time. In the 
+                    future I'd like to make the plots nicer, and include outdoor temperature data as well.
+                </p>
+                <p class="date">
+                    2020-09
+                </p>
+            </div>
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://git.marks.kitchen/mark/local-podcast-generator">Local Podcast Generator</a>
+                </h1>
+                <p class="card-text">
+                    I had some audio files on my phone I wanted to listen to like a podcast. My podcast app is way
+                    better for this type of content than a general purpose media player. So this app will locally
+                    create a web server that serves an rss feed generated from a directory on your phone. This can 
+                    be added like any other podcast in your favorite app.
+                </p>
+                <p class="date">
+                    2020-09
+                </p>
+            </div>
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://git.marks.kitchen/mark/file-feed">File Feed</a>
+                </h1>
+                <p class="card-text">
+                    I found myself wanting to browse social feeds a lot, and wanting new content.
+                    I have a lot of documents on my file of things I haven't explored yet. So this program
+                    tries to merge the two: a generated feed of files on my computer.
+                </p>
+                <p class="date">
+                    2020-08
+                </p>
+            </div>
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://games.marks.kitchen">games.marks.kitchen</a> <a href="https://github.com/Mark-Powers/games">(source code)</a>
+                </h1>
+                <p class="card-text">
+                    A collection of HTML5 games that I've made. When I have some fun idea, 
+                    I'll host it here. It has high scores for some games too, and a scoreboard.
+                    I am pretty proud of how this website turned out, it is what I wanted
+                    to have when I was a kid.
+                </p>
+                <p class="date">
+                    2020-04
+                </p>
+            </div>
+            <div class="card">
+                <h1 class="card-title">
+                    Backdoor Learning on Models of Code
+                </h1>
+                <p class="card-text">
+                    A class project where I studied how to poison training datasets of source
+                    code to create backdoors in a model predicting a function name based on 
+                    a code body. A backdoor is an inocuous feature that will force a prediction
+                    to a target label. By modifying a small proportion of training data, with 
+                    something like adding an unused variable declaration, the backdoor will be 
+                    successfully learned. I implemented the Sever algorithm which attempts to
+                    find and remove poisoned data, but it was unsuccessful at doing so on the 
+                    code2seq model architecture. 
+                </p>
+                <p class="date">
+                    2020-04
+                </p>
+            </div>
+            <div class="card">
+                <h1 class="card-title">
+                    Multi-level Wavelet-CNN HDR Image Reconstruction from Single Exposures
+                </h1>
+                <p class="card-text">
+                    A class project that used MWCNNs to reconstruct images. On HDR single exposure
+                    images, white balancing often clips values. The novel wavelet approach was able
+                    to reconstruct image detail in a realistic way.
+                </p>
+                <p class="date">
+                    2020-04
+                </p>
+            </div>
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://github.com/Mark-Powers/marks.budget">Budget</a>
+                </h1>
+                <p class="card-text">
+                    My website I made to host manage my budget. It functions a lot like a spreadsheet, 
+                    with some more advanced features and an easier interface to use. It is multiuser, 
+                    and if you are interested in using it send me an email.
+                </p>
+                <p class="date">
+                    2019-12 (until current)
+                </p>
+            </div>
+            <div class="card">
+                <h1 class="card-title">
+                    <a href="https://github.com/Mark-Powers/SynthesisRefactoring">SynthesisRefactoring</a>
+                </h1>
+                <p class="card-text">
+                    For class, I did a project using program synthesis to refactor programs. The program tried to
+                    find areas inside source code that could be extracted into methods. It sort of works, and
+                    in the future it could really be improved by using compilers techniques. I also made
+                    a <a href="https://github.com/Mark-Powers/SynthesisRefactoringFrontend">web-frontend</a> 
+                    for it at <a href="https://refactoring.marks.kitchen/">refactoring.marks.kitchen</a>.
+                </p>
+                <p class="date">
+                    2019-10
+                </p>
+            </div>
             <div class="card">
                 <h1 class="card-title">
                     <a href="https://github.com/Mark-Powers/Cosmic-Cargo">Cosmic Cargo</a>
