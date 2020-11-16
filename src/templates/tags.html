@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Mark's Kitchen</title>
+    <title>Mark's Kitchen - Tags</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
@@ -10,20 +10,13 @@
 </head>
 
 <body>
-    
     <h1>
         <a class="navigation" href="/" title="marks.kitchen">&lt;</a>
-        Miscellany
+        Tag {{name}}
     </h1>
-    <div>
-        <a href="projects" class="btn btn-primary">Projects</a>
-    </div>
-    <div>
-        <a href="chess" class="btn btn-primary">Chess</a>
-    </div>
-    <div>
-        <a href="word-square" class="btn btn-primary">Word Play</a>
-    </nav>
+    {{> navigation}}
+    {{> feed}}
+    {{> footer}}
 </body>
 
 </html>

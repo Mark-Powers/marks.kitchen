@@ -1,86 +1,33 @@
-module.exports = {
-    titlebar: `<nav class="titlebar">
-    <div>
-    <a href="bread" class="btn btn-primary">Bread</a>
-    <a href="blog" class="btn btn-primary">Blog</a>
-    <!-- <a href="essay" class="btn btn-primary">Essays</a> (Hello inspector, this page exists, but just isn't very interesting, so I'm removing the link) -->
-    <a href="https://games.marks.kitchen" class="btn btn-primary">Games</a>
-    <a href="email" class="btn btn-primary">Email</a>
-    <a href="misc" class="btn btn-primary">Misc</a>
-</div>
-</nav>`,
-    footer: `<footer>
-    <div>Mark Powers (<span class="email">mark</span>) &#169; 2020 </div>
-    <div>
-        <a href="/feed.xml">RSS feed</a>
-        <span class="spacer"></span>
-        <a href="https://github.com/Mark-Powers">GitHub</a>
-        <span class="spacer"></span>
-        <a href="https://git.marks.kitchen/mark">Gitea</a>
-        <span class="spacer"></span>
-        <a href="https://fosstodon.org/@markp">Mastodon</a>
-        <span class="spacer"></span>
-        <br>
-    </div>
-</footer>`,
+const fs = require('fs');
+const path = require('path');
+const handlebars = require("handlebars");
 
-    index: {
-        pre: `<!doctype html>
-        <html lang="en">
-        
-        <head>
-            <title>Mark's Kitchen</title>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            <link rel="stylesheet" type="text/css" href="/css/styles.css">
-            <link rel="shortcut icon" href="/favicon.ico">
-            <link rel="alternate" type="application/rss+xml" title="RSS Feed for marks.kitchen" href="/feed.xml" />
-        </head>
-        
-        <body>
-            <h1>Welcome to Mark's Kitchen</h1>`,
-            post: `</body>
-            </html>`
-    },
-    bread: {
-        pre: `<!doctype html>
-        <html lang="en">
-        
-        <head>
-            <title>Mark's Kitchen - Bread</title>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            <link rel="stylesheet" type="text/css" href="/css/styles.css">
-            <link rel="shortcut icon" href="/favicon.ico">
-        </head>
-        
-        <body>
-            <h1>
-                <a class="navigation" href="/" title="marks.kitchen">&lt;</a>
-                Bread
-            </h1>
-            Some highlights (and lowlights) of breadmaking`,
-            post: `</body>
-            </html>`
-    },
-    blog: {
-        pre: `<!doctype html>
-        <html lang="en">
-        
-        <head>
-            <title>Mark's Kitchen - Blog</title>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            <link rel="stylesheet" type="text/css" href="/css/styles.css">
-            <link rel="shortcut icon" href="/favicon.ico">
-        </head>
-        
-        <body>
-            <h1>
-                <a class="navigation" href="/" title="marks.kitchen">&lt;</a>
-                Blog
-            </h1>`,
-            post: `</body>
-            </html>`
-    }
+function loadTemplate(templates, name, filepath){
+    const templateContent = fs.readFileSync(filepath).toString()
+    templates[name] = handlebars.compile(templateContent);
+}
+
+function loadPartial(name, filepath){
+    handlebars.registerPartial(name, fs.readFileSync(filepath).toString());
+}
+
+function setUpTemplates(){
+    loadPartial("navigation", path.join(__dirname, "templates/navigation.html"))
+    loadPartial("footer", path.join(__dirname, "templates/footer.html"))
+    loadPartial("feed", path.join(__dirname, "templates/feed.html"))
+
+    let templates = {};
+    loadTemplate(templates, "index", path.join(__dirname, 'templates/index.html'))
+    loadTemplate(templates, "bread", path.join(__dirname, 'templates/bread.html'))
+    loadTemplate(templates, "blog", path.join(__dirname, 'templates/blog.html'))
+    loadTemplate(templates, "blog-single", path.join(__dirname, 'templates/blog-single.html'))
+    loadTemplate(templates, "tags", path.join(__dirname, 'templates/tags.html'))
+    loadTemplate(templates, "misc", path.join(__dirname, 'templates/misc.html'))
+    loadTemplate(templates, "projects", path.join(__dirname, 'templates/projects.html'))
+    return templates
+}
+
+
+module.exports = {
+    setUpTemplates
 }

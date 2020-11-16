@@ -1,0 +1,24 @@
+<div class="feed">
+    {{#each posts}}
+    <div class="card">
+        <p class="card-text">{{{this.description}}}</p>
+        <div class="card-img">
+            {{#each this.images}}
+            <span>
+                <a href="/{{this}}"><img src="/{{this}}"></a>
+            </span>
+            {{/each}}
+        </div>
+        <p class="date">
+            <a href="/post/{{this.type}}/{{this.id}}">
+                {{this.createdAt}}
+            </a>
+            <span>
+                {{#each this.tags}}
+                <a class="tag" href="/tags/{{this}}">{{this}}</a>
+                {{/each}}
+            </span>
+        </p>
+    </div>
+    {{/each}}
+</div>

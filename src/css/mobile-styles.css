@@ -1,0 +1,23 @@
+@media screen and (min-width: 900px) {
+    body {
+        width: 100%;
+        /* margin: auto; */
+    }
+    .card-img {
+        display: flex;
+        flex-flow: row wrap;
+        align-content: flex-start;
+    }
+    .card img {
+        width: 400px;
+    }
+    form input[type=text], input[type=password], input[type=email] {
+        max-width: 600px;
+    }
+    form textarea {
+        max-width: 600px;
+    }
+    form input[type=submit] {
+        margin-left: 0px;
+    }
+}

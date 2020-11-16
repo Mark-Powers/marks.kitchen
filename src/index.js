@@ -100,8 +100,9 @@ function setUpModels(){
 }
 
 const models = setUpModels();
+const templates = require('./templates');
 sync();
 
-server.setUpRoutes(models, jwtFunctions, database);
+server.setUpRoutes(models, jwtFunctions, database, templates.setUpTemplates());
 server.listen(config.port);
 

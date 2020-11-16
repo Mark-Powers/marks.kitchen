@@ -87,7 +87,7 @@ async function constructFeedFromType(models, postType){
     return constructFeed(posts)
 }
 
-async function constructSinglePost(models, postType, postId){
+async function formatPostsforSingle(models, postType, postId){
     var posts = await models.posts.findAll({
         where: { 
             type: postType,
@@ -96,11 +96,25 @@ async function constructSinglePost(models, postType, postId){
     });
     posts = posts.map(x => x.get({ plain: true }));
     await addImagesAndTagsToPosts(models, posts)
-    
-    return constructFeed(posts)
+    posts.forEach(post => {
+        post.createdAt = post.createdAt.toString().substring(0, 10)
+    })
+    return posts
 }
 
-function setUpRoutes(models, jwtFunctions, database) {
+async function formatPostsForType(models, postType){
+    var posts = await models.posts.findAll({
+        where: { type: postType }, order: [['createdAt', 'DESC']]
+    });
+    posts = posts.map(x => x.get({ plain: true }));
+    await addImagesAndTagsToPosts(models, posts)
+    posts.forEach(post => {
+        post.createdAt = post.createdAt.toString().substring(0, 10)
+    })
+    return posts;
+}
+
+function setUpRoutes(models, jwtFunctions, database, templates) {
     // Authentication routine
     server.use(function (req, res, next) {
         if (req.path.toLowerCase().startsWith("/admin")) {
@@ -142,41 +156,25 @@ function setUpRoutes(models, jwtFunctions, database) {
     })
 
     server.get('/', async (req, res) => {
-        var html = []
-        html.push(templates["index"]["pre"])
-        html.push(templates["titlebar"])
-        html.push(await constructFeedFromType(models, "index"))
-        html.push(templates["footer"])
-        html.push(templates["index"]["post"])
-    
-        res.status(200).send(html.join(""))
+        let posts = await formatPostsForType(models, "index")
+        let body = templates["index"]({posts});
+        res.status(200).send(body)
     })
     server.get('/bread', async (req, res) => {
-        var html = []
-        html.push(templates["bread"]["pre"])
-        html.push(await constructFeedFromType(models, "bread"))
-        html.push(templates["footer"])
-        html.push(templates["bread"]["post"])
-    
-        res.status(200).send(html.join(""))
+        let posts = await formatPostsForType(models, "bread")
+        let body = templates["bread"]({posts});
+        res.status(200).send(body)
     })
     server.get('/blog', async (req, res) => {
-        var html = []
-        html.push(templates["blog"]["pre"])
-        html.push(await constructFeedFromType(models, "blog"))
-        html.push(templates["footer"])
-        html.push(templates["blog"]["post"])
-    
-        res.status(200).send(html.join(""))
+        let posts = await formatPostsForType(models, "blog")
+        let body = templates["blog"]({posts});
+        res.status(200).send(body)
     })
     server.get('/post/:type/:id', async (req, res) => {
-        var html = []
-        html.push(templates["blog"]["pre"])
-        html.push(await constructSinglePost(models, req.params.type, req.params.id))
-        html.push(templates["footer"])
-        html.push(templates["blog"]["post"])
-    
-        res.status(200).send(html.join(""))
+        let posts = await formatPostsforSingle(models, req.params.type, req.params.id)
+        let date = posts[0].createdAt;
+        let body = templates["blog-single"]({posts, date});
+        res.status(200).send(body)
     })
     server.get('/tags/:name', async (req, res) => {
         const { name } = req.params;
@@ -189,15 +187,12 @@ function setUpRoutes(models, jwtFunctions, database) {
         });
         posts = posts.map(x => x.get({ plain: true }));
         await addImagesAndTagsToPosts(models, posts)
+        posts.forEach(post => {
+            post.createdAt = post.createdAt.toString().substring(0, 10)
+        })
 
-        var html = []
-        html.push(templates["blog"]["pre"])
-        html.push(`<h1>#${name}</h1>`)
-        html.push(await constructFeed(posts))
-        html.push(templates["footer"])
-        html.push(templates["blog"]["post"])
-    
-        res.status(200).send(html.join(""))
+        let body = templates["tags"]({posts, name})
+        res.status(200).send(body)
     })
     
     server.get('/admin', (req, res) => res.sendFile(__dirname + "/html/admin.html"));
@@ -206,13 +201,22 @@ function setUpRoutes(models, jwtFunctions, database) {
     server.get('/email-success', (req, res) => res.sendFile(__dirname + "/html/email-success.html"))
     server.get('/feed', (req, res) => res.sendFile(__dirname + "/html/feed.html"));
     server.get('/essay', (req, res) => res.sendFile(__dirname + "/html/essay.html"));
-    server.get('/misc', (req, res) => res.sendFile(__dirname + "/html/misc.html"));
+    // server.get('/misc', (req, res) => res.sendFile(__dirname + "/html/misc.html"));
     server.get('/word-square', (req, res) => res.sendFile(__dirname + "/html/word-square.html"));
     server.get('/chess', (req, res) => res.sendFile(__dirname + "/html/chess.html"));
     server.get('/admin/chess', async (req, res, next) => res.sendFile(__dirname + "/html/chess.html"));
-    server.get('/projects', (req, res) => res.sendFile(__dirname + "/html/projects.html"));
+    // server.get('/projects', (req, res) => res.sendFile(__dirname + "/html/projects.html"));
     server.get('/zines', (req, res) => res.sendFile(__dirname + "/public/zines.html"));
     server.use('/static', express.static(__dirname + '/public'))
+
+    server.get('/misc', async (req, res) => {
+        let body = templates["misc"]();
+        res.status(200).send(body)
+    })
+    server.get('/projects', async (req, res) => {
+        let body = templates["projects"]();
+        res.status(200).send(body)
+    })
 
     server.get('/wordsquares/best', async (req, res, next) => {
         var best = await database.query("select words, name from wordsquares where best = 1", { type: database.QueryTypes.SELECT })
