@@ -15,6 +15,7 @@ function setUpTemplates(){
     loadPartial("navigation", path.join(__dirname, "templates/navigation.html"))
     loadPartial("footer", path.join(__dirname, "templates/footer.html"))
     loadPartial("feed", path.join(__dirname, "templates/feed.html"))
+    loadPartial("header", path.join(__dirname, "templates/header.html"))
 
     let templates = {};
     loadTemplate(templates, "index", path.join(__dirname, 'templates/index.html'))
