@@ -53,6 +53,9 @@ function setUpModels(){
             type: {
               type: Sequelize.STRING,
               allowNull: false,
+            },
+            title: {
+              type: Sequelize.STRING,
             },}),
         "pictures": database.define('pictures', {
             source: { type: Sequelize.TEXT, allowNull: false},

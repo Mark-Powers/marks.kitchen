@@ -50,43 +50,6 @@ function hashWithSalt(password, salt){
     return hash.digest("base64");
 };
 
-function constructFeed(posts){
-    var html = []
-    html.push(`<div class="feed">`)
-    posts.forEach(post => {
-        html.push(`<div class="card">
-        <p class="card-text">${post.description}</p>
-        <div class="card-img">`)
-        post.images.forEach(image => {
-            html.push(`<span>
-                <a href="/${image}"><img src="/${image}"></a>
-            </span>`)
-        })
-        html.push(`</div>
-        <p class="date">
-            <a href="/post/${post.type}/${post.id}">${post.createdAt.toString().substring(0,10)}</a>`)
-        post.tags.forEach(tag => {
-            html.push(`<span>
-                <a class="tag" href="/tags/${tag}">${tag}</a>
-            </span>`)
-        })
-        html.push(`</p>
-        </div>`)
-    })
-    html.push(`</div>`)
-    return html.join("");
-}
-
-async function constructFeedFromType(models, postType){
-    var posts = await models.posts.findAll({
-        where: { type: postType }, order: [['createdAt', 'DESC']]
-    });
-    posts = posts.map(x => x.get({ plain: true }));
-    await addImagesAndTagsToPosts(models, posts)
-
-    return constructFeed(posts)
-}
-
 async function formatPostsforSingle(models, postType, postId){
     var posts = await models.posts.findAll({
         where: { 
@@ -110,6 +73,7 @@ async function formatPostsForType(models, postType){
     await addImagesAndTagsToPosts(models, posts)
     posts.forEach(post => {
         post.createdAt = post.createdAt.toString().substring(0, 10)
+        post.showTitle = post.type != "bread"
     })
     return posts;
 }
@@ -384,7 +348,7 @@ function setUpRoutes(models, jwtFunctions, database, templates) {
         posts = posts.map(x => x.get({ plain: true }));
         posts.forEach(post =>{
             feed.item({
-                title: post.createdAt.toString().substring(0, post.createdAt.toString().indexOf(" GMT")),
+                title: post.title,
                 description: post.description,
                 date: post.createdAt,
                 url: `https://marks.kitchen/post/${post.type}/${post.id}`,
