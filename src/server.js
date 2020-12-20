@@ -50,6 +50,11 @@ function hashWithSalt(password, salt){
     return hash.digest("base64");
 };
 
+function formatDate(d) {
+    let month = d.toLocaleString('default', { month: 'long' });
+    return month + " " + d.getDate() + ", " + (1900+d.getYear())
+}
+
 async function formatPostsforSingle(models, postType, postId){
     var posts = await models.posts.findAll({
         where: { 
@@ -60,7 +65,8 @@ async function formatPostsforSingle(models, postType, postId){
     posts = posts.map(x => x.get({ plain: true }));
     await addImagesAndTagsToPosts(models, posts)
     posts.forEach(post => {
-        post.createdAt = post.createdAt.toString().substring(0, 10)
+        post.createdAt = formatDate(post.createdAt)
+        post.showTitle = post.type != "bread"
     })
     return posts
 }
@@ -72,7 +78,7 @@ async function formatPostsForType(models, postType){
     posts = posts.map(x => x.get({ plain: true }));
     await addImagesAndTagsToPosts(models, posts)
     posts.forEach(post => {
-        post.createdAt = post.createdAt.toString().substring(0, 10)
+        post.createdAt = formatDate(post.createdAt)
         post.showTitle = post.type != "bread"
     })
     return posts;
