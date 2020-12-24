@@ -324,8 +324,8 @@ function setUpRoutes(models, jwtFunctions, database, templates) {
     })
 
 
-    server.get('/favicon.ico', (req, res) => res.sendFile(__dirname + "/icon/favicon.ico"))
-    server.get('/favicon.svg', (req, res) => res.sendFile(__dirname + "/icon/favicon.svg"))
+    server.get('/favicon.ico', (req, res) => res.sendFile(__dirname + "/res/favicon.ico"))
+    server.get('/favicon.svg', (req, res) => res.sendFile(__dirname + "/res/favicon.svg"))
     server.get('/css/:id', (req, res) => {
         res.sendFile(__dirname + "/css/" + req.params.id);
     });
@@ -338,6 +338,9 @@ function setUpRoutes(models, jwtFunctions, database, templates) {
     server.get('/js/:id', (req, res) => {
         res.sendFile(__dirname + "/js/" + req.params.id);
     });
+    server.get('/res/:id', (req, res) => {
+        res.sendFile(__dirname + "/res/" + req.params.id);
+    });
 
     server.get('/feed.xml', async (req, res) => {
         var feed = new rss({
@@ -345,7 +348,7 @@ function setUpRoutes(models, jwtFunctions, database, templates) {
             description: "Posts from marks.kitchen",
             feed_url: "https://marks.kitchen/rss",
             site_url: "https://marks.kitchen",
-            webMaster: "webmaster@marks.kitchen",
+            webMaster: "webmaster@marks.kitchen (Mark Powers)",
             copyright: "Mark Powers"
         })
         var posts = await models.posts.findAll({
