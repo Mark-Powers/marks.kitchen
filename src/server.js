@@ -266,8 +266,8 @@ function setUpRoutes(models, jwtFunctions, database, templates) {
         try {
             const type = req.body.type
             req.body.description = marked(req.body.description)
+            req.body.likes = 0
             const newPost = await models.posts.create(req.body);
-            newPost.likes = 0
             req.files.forEach(async (file) => {	
                 await models.pictures.create({ "source": "uploads/" + file.filename, "postId": newPost.id });
                 console.log("uploaded ", file.path);
