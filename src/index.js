@@ -56,7 +56,11 @@ function setUpModels(){
             },
             title: {
               type: Sequelize.STRING,
-            },}),
+            },
+            likes: {
+              type: Sequelize.INTEGER,
+            }
+        }),
         "pictures": database.define('pictures', {
             source: { type: Sequelize.TEXT, allowNull: false},
           }),

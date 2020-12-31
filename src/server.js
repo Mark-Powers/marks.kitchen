@@ -146,6 +146,15 @@ function setUpRoutes(models, jwtFunctions, database, templates) {
         let body = templates["blog-single"]({posts, date});
         res.status(200).send(body)
     })
+    server.get('/post/like/:type/:id', async (req, res) => {
+        let type = req.params.type
+        let id = req.params.id
+        var post = await models.posts.findOne({
+            where: { type, id },
+        });
+        post.update({likes: post.likes+1})
+        res.redirect(`/post/${type}/${id}`);
+    })
     server.get('/tags/:name', async (req, res) => {
         const { name } = req.params;
         const postsWithTag = await models.tags.findAll({ attributes: ["postId"], where: { text: name } })
@@ -258,6 +267,7 @@ function setUpRoutes(models, jwtFunctions, database, templates) {
             const type = req.body.type
             req.body.description = marked(req.body.description)
             const newPost = await models.posts.create(req.body);
+            newPost.likes = 0
             req.files.forEach(async (file) => {	
                 await models.pictures.create({ "source": "uploads/" + file.filename, "postId": newPost.id });
                 console.log("uploaded ", file.path);
