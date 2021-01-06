@@ -147,6 +147,7 @@ p {
     vertical-align: middle;
     white-space: nowrap;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .btn-primary {
@@ -232,7 +233,7 @@ a.navigation:visited, a.navigation:link {
     content: "@marks.kitchen";
 }
 
-a.cool {
+.cool {
     float: right;
 }
 

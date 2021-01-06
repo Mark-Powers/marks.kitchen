@@ -153,7 +153,7 @@ function setUpRoutes(models, jwtFunctions, database, templates) {
             where: { type, id },
         });
         post.update({likes: post.likes+1})
-        res.redirect(`/post/${type}/${id}`);
+        res.status(200).send({likes: post.likes});
     })
     server.get('/tags/:name', async (req, res) => {
         const { name } = req.params;

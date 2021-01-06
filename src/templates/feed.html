@@ -21,9 +21,9 @@
                 <a class="tag" href="/tags/{{this}}">{{this}}</a>
                 {{/each}}
             </span>
-            <a class="cool btn btn-secondary" href="/post/like/{{this.type}}/{{this.id}}">
+            <span class="cool btn btn-secondary" onclick="likePost('{{this.type}}', {{this.id}})" id="btn_{{this.type}}_{{this.id}}">
               &#128077; ({{this.likes}})
-            </a>
+            </span>
         </p>
     </div>
     {{/each}}
